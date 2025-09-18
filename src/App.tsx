@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Element, scroller } from 'react-scroll';
 import { UserCircle, School, BookOpen, Briefcase, FileBadge, Code, HeartHandshake, Mail, Share2, Search, PenTool } from 'lucide-react';
 
@@ -22,11 +23,12 @@ import Blog from './pages/Blog';
 // Import data
 import { content, certificates } from './data/content';
 
-function App() {
+// Main App Component wrapped with Router
+function AppContent() {
   const [language, setLanguage] = useState<'en' | 'bn'>('en');
   const [activeSection, setActiveSection] = useState<string>('profile');
-  const [currentPage, setCurrentPage] = useState<string>('home');
   const [age, setAge] = useState<number>(0);
+  const location = useLocation();
 
   // Calculate age on component mount and update daily
   useEffect(() => {
@@ -65,20 +67,6 @@ function App() {
 
   // Smooth scrolling handler
   const scrollToSection = (section: string) => {
-    if (section === 'research') {
-      setCurrentPage('research');
-      // Scroll to top when switching to research page
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    if (section === 'blog') {
-      setCurrentPage('blog');
-      // Scroll to top when switching to blog page
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    
-    setCurrentPage('home');
     scroller.scrollTo(section, {
       duration: 800,
       smooth: true,
@@ -87,84 +75,67 @@ function App() {
     setActiveSection(section);
   };
 
-  // Back to home handler
-  const handleBackToHome = () => {
-    setCurrentPage('home');
-    setActiveSection('profile');
-    // Scroll to top when going back to home
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Home Page Component
+  const HomePage = () => (
+    <>
+      {/* Profile Section */}
+      <ProfileSection
+        language={language}
+        content={content as any}
+        scrollToSection={scrollToSection}
+      />
 
-  // Render current page
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'research':
-        return <Research language={language} />;
-      case 'blog':
-        return <Blog language={language} />;
-      default:
-        return (
-          <>
-            {/* Profile Section */}
-            <ProfileSection
-              language={language}
-              content={content as any}
-              scrollToSection={scrollToSection}
-            />
+      {/* Main Content Sections */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 gap-8">
+          {/* Education Section */}
+          <Element name="education">
+            <Education language={language} />
+          </Element>
 
-            {/* Main Content Sections */}
-            <main className="container mx-auto px-4 py-12">
-              <div className="grid grid-cols-1 gap-8">
-                {/* Education Section */}
-                <Element name="education">
-                  <Education language={language} />
-                </Element>
+          {/* Courses Section */}
+          <Element name="courses">
+            <Courses language={language} />
+          </Element>
 
-                {/* Courses Section */}
-                <Element name="courses">
-                  <Courses language={language} />
-                </Element>
+          {/* Experience Section */}
+          <Element name="experience">
+            <Experience language={language} />
+          </Element>
 
-                {/* Experience Section */}
-                <Element name="experience">
-                  <Experience language={language} />
-                </Element>
+          {/* Certificates Section */}
+          <CertificateSection
+            language={language}
+            content={content}
+            certificates={certificates}
+          />
 
-                {/* Certificates Section */}
-                <CertificateSection
-                  language={language}
-                  content={content}
-                  certificates={certificates}
-                />
+          {/* Skills Section */}
+          <Element name="skills">
+            <Skill language={language} />
+          </Element>
 
-                {/* Skills Section */}
-                <Element name="skills">
-                  <Skill language={language} />
-                </Element>
+          {/* Family Information Section */}
+          <Element name="family">
+            <Information language={language} age={age} />
+          </Element>
 
-                {/* Family Information Section */}
-                <Element name="family">
-                  <Information language={language} age={age} />
-                </Element>
+          {/* Contact Section */}
+          <Element name="contact">
+            <Contact language={language} />
+          </Element>
+        </div>
+      </main>
 
-                {/* Contact Section */}
-                <Element name="contact">
-                  <Contact language={language} />
-                </Element>
-              </div>
-            </main>
-
-            {/* Footer */}
-            <Element name="footer">
-              <Footer language={language} />
-            </Element>
-          </>
-        );
-    }
-  };
+      {/* Footer */}
+      <Element name="footer">
+        <Footer language={language} />
+      </Element>
+    </>
+  );
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-surface to-surface-elevated">
       {/* Navigation */}
       <Navigation 
         navigationItems={navigationItems}
@@ -172,20 +143,33 @@ function App() {
         scrollToSection={scrollToSection}
         language={language}
         setLanguage={setLanguage}
-        currentPage={currentPage}
-        onBackToHome={handleBackToHome}
       />
 
-      {/* Render Current Page */}
-      {renderCurrentPage()}
+      {/* Routes */}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/research" element={<Research language={language} />} />
+        <Route path="/blog" element={<Blog language={language} />} />
+      </Routes>
 
-      {/* Professional Floating Menu */}
-      <FloatingMenu 
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-        language={language}
-      />
+      {/* Professional Floating Menu - Only show on home page */}
+      {location.pathname === '/' && (
+        <FloatingMenu 
+          activeSection={activeSection}
+          scrollToSection={scrollToSection}
+          language={language}
+        />
+      )}
     </div>
+  );
+}
+
+// Main App Component with Router
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

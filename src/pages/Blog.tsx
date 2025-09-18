@@ -34,9 +34,9 @@ const Blog = ({ language }: BlogProps) => {
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       <Calendar size={14} />
                       <span>{new Date(post.date).toLocaleDateString()}</span>
-                      {post.type === 'poem' && (
-                        <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs ml-2">
-                          {language === 'en' ? 'Poetry' : 'কবিতা'}
+                      {post.type === 'project' && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs ml-2">
+                          {language === 'en' ? 'Project' : 'প্রকল্প'}
                         </span>
                       )}
                     </div>
