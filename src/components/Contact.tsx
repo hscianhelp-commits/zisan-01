@@ -146,11 +146,46 @@ const Contact = ({ language }: ContactProps) => {
 
   return (
     <Element name="contact">
-      <ProfessionalLayout
-        title={contactData.title[language]}
-        icon={<Mail className="text-white" size={24} />}
-        className="mx-2 sm:mx-0"
-      >
+      <section className="relative pt-20 pb-16 overflow-hidden bg-gradient-to-br from-pink-50 via-white to-rose-50/30 backdrop-blur-sm text-slate-800">
+        {/* Subtle animated background elements */}
+        <motion.div 
+          className="absolute inset-0 opacity-5 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.05 }}
+          transition={{ duration: 2 }}
+        >
+          <motion.div 
+            className="absolute top-1/4 left-1/4 w-40 h-40 rounded-full bg-pink-400 filter blur-xl"
+            animate={{
+              scale: [1, 1.1, 1],
+              translateX: [-10, 10, -10],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div 
+            className="absolute bottom-1/3 right-1/3 w-48 h-48 rounded-full bg-rose-400 filter blur-xl"
+            animate={{
+              scale: [1, 1.05, 1],
+              translateY: [0, -10, 0],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        </motion.div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <ProfessionalLayout
+            title={contactData.title[language]}
+            icon={<Mail className="text-white" size={24} />}
+            className="mx-2 sm:mx-0"
+          >
 
         {isSubmitted && (
           <motion.div
@@ -279,8 +314,10 @@ const Contact = ({ language }: ContactProps) => {
               </motion.button>
             </form>
           </motion.div>
+          </div>
+          </ProfessionalLayout>
         </div>
-      </ProfessionalLayout>
+      </section>
     </Element>
   );
 };

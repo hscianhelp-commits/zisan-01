@@ -8,8 +8,41 @@ interface BlogProps {
 
 const Blog = ({ language }: BlogProps) => {
   return (
-    <div className="min-h-screen bg-slate-50 pt-16">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-h-screen relative pt-20 pb-16 overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50/30 backdrop-blur-sm">
+      {/* Subtle animated background elements */}
+      <motion.div 
+        className="absolute inset-0 opacity-5 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05 }}
+        transition={{ duration: 2 }}
+      >
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-40 h-40 rounded-full bg-purple-400 filter blur-xl"
+          animate={{
+            scale: [1, 1.1, 1],
+            translateX: [-10, 10, -10],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-1/3 right-1/3 w-48 h-48 rounded-full bg-blue-400 filter blur-xl"
+          animate={{
+            scale: [1, 1.05, 1],
+            translateY: [0, -10, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+
+      <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           <div className="space-y-6">
             {blogData.map((post: BlogPost, index) => (
               <motion.article
@@ -85,7 +118,7 @@ const Blog = ({ language }: BlogProps) => {
                     {post.projectLinks && post.projectLinks.length > 0 && (
                       <div className="pt-4 border-t border-gray-200">
                         <div className="flex flex-wrap gap-3">
-                          {post.projectLinks.map((link, linkIndex) => (
+                          {post.projectLinks.map((link: any, linkIndex: number) => (
                             <a
                               key={linkIndex}
                               href={link.url}
