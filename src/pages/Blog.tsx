@@ -85,7 +85,7 @@ const Blog = ({ language }: BlogProps) => {
                     {post.projectLinks && post.projectLinks.length > 0 && (
                       <div className="pt-4 border-t border-gray-200">
                         <div className="flex flex-wrap gap-3">
-                          {post.projectLinks.map((link, linkIndex) => (
+                          {post.projectLinks.map((link: any, linkIndex: number) => (
                             <a
                               key={linkIndex}
                               href={link.url}
